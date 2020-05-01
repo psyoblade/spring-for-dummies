@@ -39,13 +39,14 @@ public void 같은객체() {
 > 이 장에서는 Dependency Injection 즉, 의존성 주입방식에 대해 이해하고, 실습합니다
 > 터미널을 통해서 사용자를 생성하고 (중복인 경우 예외를 발생), 패스워드를 변경할 수 있는 서비스를 구현합니다
 
-### 멤버를 관리하는 클래스
-> Member, MemberDAO, WrongIdPasswordException
+### 1. 멤버관리 서비스 구현 예제
 
-### 멤버 등록 서비스
-> RegisterRequest, ResiterService, DuplicateMemberException
-
-### 멤버 패스워드 변경 서비스
-> ChangePasswordService, MemberNotFoundException
-
+* 멤버를 관리하는 클래스
+  * Member, MemberDAO, WrongIdPasswordException
+* 멤버 등록 서비스
+  * RegisterRequest, ResiterService, DuplicateMemberException
+* 멤버 패스워드 변경 서비스
+  * ChangePasswordService, MemberNotFoundException
+* Aggregator 에서 관련작업을 대행
+  * Assembler, MainForAssembler
 

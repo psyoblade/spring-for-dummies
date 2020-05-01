@@ -6,7 +6,7 @@ import spring.ch03.member.Member;
 import spring.ch03.member.MemberDao;
 import spring.ch03.password.ChangePasswordService;
 import spring.ch03.register.RegisterRequest;
-import spring.ch03.register.RegisterService;
+import spring.ch03.register.MemberRegisterService;
 
 import static junit.framework.TestCase.assertEquals;
 
@@ -54,8 +54,8 @@ public class AppTest {
     @Test
     public void 회원가입() {
         RegisterRequest registerRequest = newRegisterRequest();
-        RegisterService registerService = new RegisterService(memberDao);
-        registerService.regist(registerRequest);
+        MemberRegisterService memberRegisterService = new MemberRegisterService(memberDao);
+        memberRegisterService.regist(registerRequest);
         Member registeredMember = memberDao.findByEmail(registerRequest.getEmail());
         assertEquals(registerRequest.getEmail(), registeredMember.getEmail());
     }
