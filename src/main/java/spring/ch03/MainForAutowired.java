@@ -1,8 +1,7 @@
 package spring.ch03;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import spring.ch03.config.MemberConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import spring.ch03.member.Member;
 import spring.ch03.member.MemberDao;
 import spring.ch03.password.ChangePasswordService;
@@ -14,13 +13,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
-public class MainForAppContext {
-    private static ApplicationContext appContext = new AnnotationConfigApplicationContext(MemberConfiguration.class);
-    private static MemberDao memberDao = appContext.getBean("getMemberDao", MemberDao.class);
-    private static MemberRegisterService memberRegisterService = appContext.getBean("getMemberRegisterService", MemberRegisterService.class);
-    private static ChangePasswordService changePasswordService = appContext.getBean("getChangePasswordService", ChangePasswordService.class);
+// 아래와 같은 구현은 의도한대로 동작하지 않는데 이는 ApplicationContext 에서 매개변수로 들어가지 않았기 때문에 Configuration 을 찾을 수 없기 때문이다
+// SpringBoot 에서는 ComponentScan 이라는 기법을 통해서 자동으로 찾아주기 때문에 동작하는 것이다
+// 제대로 동작하게 하기 위해서는 SpringBoot 의 ComponentScan 즉, SpringBootApplication 으로 구현하여 자동으로 찾게 만들고 ApplicationRunner 를 이용해서 구현하면 된다
+public class MainForAutowired {
+    // 아래는 동작하지 않는 코드
+    @Autowired private MemberDao memberDao;
+    @Autowired private MemberRegisterService memberRegisterService;
+    @Autowired private ChangePasswordService changePasswordService;
 
-    public static void main(String[] args) throws IOException {
+    public void run() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         while (true) {
             System.out.println("명령어를 입력하세요");
@@ -49,14 +51,19 @@ public class MainForAppContext {
         }
     }
 
-    public static boolean existsMember(String email) {
+    public static void main(String[] args) throws IOException {
+        MainForAutowired main = new MainForAutowired();
+        main.run();
+    }
+
+    public boolean existsMember(String email) {
         Member member = memberDao.findByEmail(email);
         return member != null;
     }
 
     // 입력된 명령어를 통해 RegisterRequest 생성 후 registerService 통해 등록
     // 0:command, 1:email, 2:username, 3:password, 4:password
-    public static void processNewCommand(String[] commands) {
+    public void processNewCommand(String[] commands) {
         validateLength(commands, 5);
         validatePasswordMatch(commands);
         RegisterRequest registerRequest = new RegisterRequest();
@@ -66,7 +73,7 @@ public class MainForAppContext {
         memberRegisterService.regist(registerRequest);
     }
 
-    public static void processChangeCommand(String[] commands) {
+    public void processChangeCommand(String[] commands) {
         validateLength(commands, 5);
         String email = commands[1];
         String oldPass = commands[3];
@@ -74,26 +81,26 @@ public class MainForAppContext {
         changePasswordService.changePassword(email, oldPass, newPass);
     }
 
-    public static void processListCommand(String[] commands) {
+    public void processListCommand(String[] commands) {
         validateLength(commands, 1);
         printMembers(memberDao.list());
     }
 
-    private static void printMembers(List<Member> list) {
+    private void printMembers(List<Member> list) {
         list.forEach(System.out::println);
     }
 
-    private static void validateLength(String[] commands, int length) {
+    private void validateLength(String[] commands, int length) {
         if (commands.length != length)
             throw new IllegalArgumentException(String.format("명령어의 개수는 반드시 5개여야 합니다 - %d", commands.length));
     }
 
-    private static void validatePasswordMatch(String[] commands) {
+    private void validatePasswordMatch(String[] commands) {
         if (!commands[3].equals(commands[4]))
             throw new IllegalArgumentException(String.format("패스워드가 일치하지 않습니다 - %s != %s", commands[3], commands[4]));
     }
 
-    private static void printHelp() {
+    private void printHelp() {
         System.out.println("create email username password password");
         System.out.println("update email old-password new-password");
     }

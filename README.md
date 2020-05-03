@@ -55,8 +55,12 @@ public void 같은객체() {
 > 스프링이 의존성을 어떻게 주입할 지에 대한 설정정보를 @Configuration 어노테이션을 통해서 수행합니다
 > 어노테이션이 매겨진 내부에는 해당 객체를 생성하는 new 가 있어서 왜 singleton 으로 동작하는지 의아해 했는데 내부 호출 시에 new 를 통해 수행하지 않고 메소드나 별도의 name 을 통해 applicationContext 내부에 있는 캐시된 객체를 가져올 수 있기 때문이다. 즉, 설정해 두지 않았더라도 기본적으로 메소드 이름이 해당 Bean 객체의 이름이 되기 때문입니다.
 > 특정 데이터 유형에 매칭되는 메소드가 하나 밖에 없다면 해당 메소드도 당연히 찾을 수 있어 @Autowired 가 왜 동작하는 지 알 수 있습니다
+> 즉, 스프링은 설정된 클래스의 구현을 그대로 매번 호출하지 않으며, 캐싱된 객체를 사용하도록 프레임워크에서 돕고 있습니다
 
 * 멤버 목록/정보를 출력하는 클래스를 구현하되 ApplicationContext 통해 getBean 을 이용해 구현해보자
   * MemberListService, MemberInfoService
+* 예제로 잘 못 구현한 클래스가 MainForAutowired 라는 어플리케이셔인데 이는 ApplicationContex 생성시에 매개변수로 Configuration 을 넣어주지 못 했기 때문에 Autowired 되지 않는다
+  * SpringBoot 에서는 ComponentScan 이라는 기법을 통해서 자동으로 찾아주기 때문에 동작하는 것이다
+  * 제대로 동작하게 하기 위해서는 SpringBoot 의 ComponentScan 즉, SpringBootApplication 으로 구현하여 자동으로 찾게 만들고 ApplicationRunner 를 이용해서 구현하면 된다
 
 
