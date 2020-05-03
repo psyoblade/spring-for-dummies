@@ -4,6 +4,10 @@ import spring.ch03.member.MemberDao;
 import spring.ch03.password.ChangePasswordService;
 import spring.ch03.register.MemberRegisterService;
 
+/**
+ *
+ * @Deprecated Use Autowired instead.
+ */
 public class Assembler {
 
     private MemberDao memberDao;

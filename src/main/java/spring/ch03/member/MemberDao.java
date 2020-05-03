@@ -1,7 +1,7 @@
 package spring.ch03.member;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+
 import spring.ch03.exceptions.*;
 
 public class MemberDao {
@@ -28,6 +28,10 @@ public class MemberDao {
         if (!members.containsKey(email))
             throw new MemberNotFoundException(String.format("업데이트할 email %s 이 존재하지 않습니다", email));
         members.put(member.getEmail(), member);
+    }
+
+    public List<Member> list() {
+        return new ArrayList<>(members.values());
     }
 
     public void clear() {

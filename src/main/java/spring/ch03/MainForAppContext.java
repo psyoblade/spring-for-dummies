@@ -1,7 +1,13 @@
 package spring.ch03;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import spring.ch03.assembler.Assembler;
+import spring.ch03.config.MemberConfiguration;
 import spring.ch03.member.Member;
+import spring.ch03.member.MemberDao;
+import spring.ch03.password.ChangePasswordService;
+import spring.ch03.register.MemberRegisterService;
 import spring.ch03.register.RegisterRequest;
 
 import java.io.BufferedReader;
@@ -9,8 +15,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
-public class MainForAssembler {
-    private static Assembler assembler = new Assembler();
+public class MainForAppContext {
+    private static ApplicationContext appContext = new AnnotationConfigApplicationContext(MemberConfiguration.class);
+    private static MemberDao memberDao = appContext.getBean("getMemberDao", MemberDao.class);
+    private static MemberRegisterService memberRegisterService = appContext.getBean("getMemberRegisterService", MemberRegisterService.class);
+    private static ChangePasswordService changePasswordService = appContext.getBean("getChangePasswordService", ChangePasswordService.class);
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -42,7 +51,7 @@ public class MainForAssembler {
     }
 
     public static boolean existsMember(String email) {
-        Member member = assembler.getMemberDao().findByEmail(email);
+        Member member = memberDao.findByEmail(email);
         return member != null;
     }
 
@@ -55,7 +64,7 @@ public class MainForAssembler {
         registerRequest.setEmail(commands[1]);
         registerRequest.setName(commands[2]);
         registerRequest.setPassword(commands[3]);
-        assembler.getMemberRegisterService().regist(registerRequest);
+        memberRegisterService.regist(registerRequest);
     }
 
     public static void processChangeCommand(String[] commands) {
@@ -63,12 +72,12 @@ public class MainForAssembler {
         String email = commands[1];
         String oldPass = commands[3];
         String newPass = commands[4];
-        assembler.getChangePasswordService().changePassword(email, oldPass, newPass);
+        changePasswordService.changePassword(email, oldPass, newPass);
     }
 
     public static void processListCommand(String[] commands) {
         validateLength(commands, 1);
-        printMembers(assembler.getMemberDao().list());
+        printMembers(memberDao.list());
     }
 
     private static void printMembers(List<Member> list) {
