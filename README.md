@@ -64,3 +64,18 @@ public void 같은객체() {
   * 제대로 동작하게 하기 위해서는 SpringBoot 의 ComponentScan 즉, SpringBootApplication 으로 구현하여 자동으로 찾게 만들고 ApplicationRunner 를 이용해서 구현하면 된다
 
 
+
+## Chapter 04. 의존성 자동 주입
+> 기존에 생성자를 통해 의존성을 주입 받았으나 @Autowired 를 통해 자동 주입받을 수 있게 되었습니다. 마찬가지로 setter 방식의 주입도 간결하게 변경되었습니다
+> 동일한 유형의 빈이 2개가 존재한다면 상속의 경우도 하나로 받을 수 있기 때문에 반드시 빈의 이름을 명시해 주거나 Autowired 의 경우 @Qualifier 로 구분되어야만 합니다
+
+### 1. @Autowired 를 통해 자동 주입되기 위한 조건
+* @Autowired 가 붙은 변수 혹은 메소드에 해당하는 해당 Class 유형의 @Bean 이 존재해야만 한다
+  * 해당 Bean 객체는 SpringContext 에서 찾을 수 있어야 하는데 AnnotationConfigSpringContext 의 경우 해당 @Configuration 설정이 된 Class 를 매개변수로 넘겨야만 한다
+  * 이런 방식으로 Configuration 즉 설정된 Bean 들에 대해서만 스프링이 객체를 관리해 주게 되고 @Configuration 내부의 @Bean 메소드 혹은 객체를 통해 찾을 수 있습니다
+  * 동일한 유형의 Bean 이 여러개 존재하는 경우 Autowire 될 수 없는데 이 때에는 ctx.getBean("name", class) 와 같이 이름을 명시해 주거나, @Bean 과 @Autowired 양쪽 모두 @Qualifier가 명시되어야 한다
+
+
+
+
+

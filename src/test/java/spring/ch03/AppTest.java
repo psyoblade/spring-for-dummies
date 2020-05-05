@@ -2,11 +2,11 @@ package spring.ch03;
 
 import org.junit.*;
 import spring.ch03.exceptions.MemberNotFoundException;
-import spring.ch03.member.Member;
-import spring.ch03.member.MemberDao;
-import spring.ch03.password.ChangePasswordService;
-import spring.ch03.register.RegisterRequest;
-import spring.ch03.register.MemberRegisterService;
+import spring.ch03.entities.Member;
+import spring.ch03.repositories.MemberDao;
+import spring.ch03.services.ChangePasswordService;
+import spring.ch03.entities.RegisterRequest;
+import spring.ch03.services.MemberRegisterService;
 
 import static junit.framework.TestCase.assertEquals;
 

@@ -3,11 +3,11 @@ package spring.ch03;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import spring.ch03.config.MemberConfiguration;
-import spring.ch03.member.Member;
-import spring.ch03.member.MemberDao;
-import spring.ch03.password.ChangePasswordService;
-import spring.ch03.register.MemberRegisterService;
-import spring.ch03.register.RegisterRequest;
+import spring.ch03.entities.Member;
+import spring.ch03.repositories.MemberDao;
+import spring.ch03.services.ChangePasswordService;
+import spring.ch03.services.MemberRegisterService;
+import spring.ch03.entities.RegisterRequest;
 
 import java.io.BufferedReader;
 import java.io.IOException;

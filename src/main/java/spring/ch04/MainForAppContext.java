@@ -1,25 +1,43 @@
-package spring.ch03;
+package spring.ch04;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import spring.ch03.entities.Member;
-import spring.ch03.repositories.MemberDao;
-import spring.ch03.services.ChangePasswordService;
-import spring.ch03.services.MemberRegisterService;
-import spring.ch03.entities.RegisterRequest;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import spring.ch04.config.AppContext;
+import spring.ch04.entities.Member;
+import spring.ch04.entities.MemberInfoPrinter;
+import spring.ch04.entities.MemberPrinter;
+import spring.ch04.entities.RegisterRequest;
+import spring.ch04.repositories.MemberDao;
+import spring.ch04.services.ChangePasswordService;
+import spring.ch04.services.MemberRegisterService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
-// 아래와 같은 구현은 의도한대로 동작하지 않는데 이는 ApplicationContext 에서 매개변수로 들어가지 않았기 때문에 Configuration 을 찾을 수 없기 때문이다
-// SpringBoot 에서는 ComponentScan 이라는 기법을 통해서 자동으로 찾아주기 때문에 동작하는 것이다
-// 제대로 동작하게 하기 위해서는 SpringBoot 의 ComponentScan 즉, SpringBootApplication 으로 구현하여 자동으로 찾게 만들고 ApplicationRunner 를 이용해서 구현하면 된다
-public class MainForAutowired {
-    // 아래는 동작하지 않는 코드
-    @Autowired private MemberDao memberDao;
-    @Autowired private MemberRegisterService memberRegisterService;
-    @Autowired private ChangePasswordService changePasswordService;
+public class MainForAppContext {
+
+    private MemberDao memberDao;
+    private MemberRegisterService memberRegisterService;
+    private ChangePasswordService changePasswordService;
+    private MemberPrinter memberPrinter;
+    private MemberInfoPrinter memberInfoPrinter;
+
+    public MainForAppContext() {
+        AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(AppContext.class);
+        memberDao = ctx.getBean(MemberDao.class);
+        memberRegisterService = ctx.getBean(MemberRegisterService.class);
+        changePasswordService = ctx.getBean(ChangePasswordService.class);
+        memberPrinter = ctx.getBean("memberPrinter", MemberPrinter.class); // 명확하게 하나의 클래스가 아니라면 이름으로 구분되어야만 한다
+        memberInfoPrinter = ctx.getBean("memberInfoPrinter", MemberInfoPrinter.class);
+    }
+
+    public static void main(String[] args) throws IOException {
+        MainForAppContext app = new MainForAppContext();
+        app.run();
+    }
 
     public void run() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -50,11 +68,6 @@ public class MainForAutowired {
         }
     }
 
-    public static void main(String[] args) throws IOException {
-        MainForAutowired main = new MainForAutowired();
-        main.run();
-    }
-
     public boolean existsMember(String email) {
         Member member = memberDao.findByEmail(email);
         return member != null;
@@ -73,7 +86,7 @@ public class MainForAutowired {
     }
 
     public void processChangeCommand(String[] commands) {
-        validateLength(commands, 5);
+        validateLength(commands, 4);
         String email = commands[1];
         String oldPass = commands[3];
         String newPass = commands[4];
@@ -86,7 +99,7 @@ public class MainForAutowired {
     }
 
     private void printMembers(List<Member> list) {
-        list.forEach(System.out::println);
+        list.forEach(memberInfoPrinter::printMemberInfo);
     }
 
     private void validateLength(String[] commands, int length) {

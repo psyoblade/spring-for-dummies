@@ -1,8 +1,8 @@
-package spring.ch03.assembler;
+package spring.ch03;
 
-import spring.ch03.member.MemberDao;
-import spring.ch03.password.ChangePasswordService;
-import spring.ch03.register.MemberRegisterService;
+import spring.ch03.repositories.MemberDao;
+import spring.ch03.services.ChangePasswordService;
+import spring.ch03.services.MemberRegisterService;
 
 /**
  *

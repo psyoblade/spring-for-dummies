@@ -1,11 +1,22 @@
-package spring.ch03.register;
+package spring.ch03.entities;
 
-import spring.ch03.member.Member;
+import java.time.LocalDateTime;
 
-public class RegisterRequest {
+public class Member {
+
+    private Long id;
     private String email;
     private String password;
     private String name;
+    private LocalDateTime registerDateTime;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getEmail() {
         return email;
@@ -31,20 +42,22 @@ public class RegisterRequest {
         this.name = name;
     }
 
+    public LocalDateTime getRegisterDateTime() {
+        return registerDateTime;
+    }
+
+    public void setRegisterDateTime(LocalDateTime registerDateTime) {
+        this.registerDateTime = registerDateTime;
+    }
+
     @Override
     public String toString() {
-        return "RegisterRequest{" +
-                "email='" + email + '\'' +
+        return "Member{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
                 '}';
     }
 
-    public Member toMember() {
-        Member member = new Member();
-        member.setEmail(this.email);
-        member.setPassword(this.password);
-        member.setName(this.name);
-        return member;
-    }
 }

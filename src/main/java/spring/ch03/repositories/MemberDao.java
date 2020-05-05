@@ -1,7 +1,8 @@
-package spring.ch03.member;
+package spring.ch03.repositories;
 
 import java.util.*;
 
+import spring.ch03.entities.Member;
 import spring.ch03.exceptions.*;
 
 public class MemberDao {

@@ -1,8 +1,7 @@
 package spring.ch03;
 
-import spring.ch03.assembler.Assembler;
-import spring.ch03.member.Member;
-import spring.ch03.register.RegisterRequest;
+import spring.ch03.entities.Member;
+import spring.ch03.entities.RegisterRequest;
 
 import java.io.BufferedReader;
 import java.io.IOException;
