@@ -64,7 +64,6 @@ public void 같은객체() {
   * 제대로 동작하게 하기 위해서는 SpringBoot 의 ComponentScan 즉, SpringBootApplication 으로 구현하여 자동으로 찾게 만들고 ApplicationRunner 를 이용해서 구현하면 된다
 
 
-
 ## Chapter 04. 의존성 자동 주입
 > 기존에 생성자를 통해 의존성을 주입 받았으나 @Autowired 를 통해 자동 주입받을 수 있게 되었습니다. 마찬가지로 setter 방식의 주입도 간결하게 변경되었습니다
 > 동일한 유형의 빈이 2개가 존재한다면 상속의 경우도 하나로 받을 수 있기 때문에 반드시 빈의 이름을 명시해 주거나 Autowired 의 경우 @Qualifier 로 구분되어야만 합니다
@@ -75,6 +74,23 @@ public void 같은객체() {
   * 이런 방식으로 Configuration 즉 설정된 Bean 들에 대해서만 스프링이 객체를 관리해 주게 되고 @Configuration 내부의 @Bean 메소드 혹은 객체를 통해 찾을 수 있습니다
   * 동일한 유형의 Bean 이 여러개 존재하는 경우 Autowire 될 수 없는데 이 때에는 ctx.getBean("name", class) 와 같이 이름을 명시해 주거나, @Bean 과 @Autowired 양쪽 모두 @Qualifier가 명시되어야 한다
 
+
+## Chatper 05. 컴포넌트 스캔
+> 컴포넌트 스캔이란? 기존의 Configuration 및 Import 를 통한 방식은 매번 등록해 주거나 관리해 주어야 하는 부담이 있으므로 Scan 하고 싶은 범위와 제외하고 싶은 조건을 통해 모든 Component 를 찾아주는 기능입니다
+> 벌써 논의하기에는 이르지만 빈의 기본 설정은 singleton 이기 때문에 결국 빈으로 등록되는 클래스 혹은 객체는 상태가 없을 가능성이 높고 함수 덩어리라고 보아도 좋을 것 같다
+> 즉, 자주 변하지 않으며 처음에 생성해 두면 좋을 것 같은 객체를 Bean 혹은 Component 로 두고, 상태를 가지는 경우는 별도로 구현하거나 Prototype 유형으로 관리되면 좋을 것 같다
+
+### ComopnentScan 을 사용해보자
+> 단순한 Caculator 서비스를 하나 만들어 main 함수에서 1 ~ 10 까지 더한 합을 출력하는 Spring Application 을 만들어봅니다
+
+* 1. 각 컴포넌트에 @Component 달고, @Configuration 에서 @ComponentScan 달고, 해당 Configuration 물고 ApplicationContext 생성하면 @Autowired 먹을까?
+  * 해당 컨텍스트를 통해 getBean 한 경우는 동작하지만, 그냥 @Autowired 한 경우는 NullPointerException 이 떨어지는데 왜 그럴까..?
+* 2. 이미 ComponentScan 된 Bean 에 대해서 다시 Bean 선언하면 문제 없는지?
+  * 같은 이름으로 생성한 경우 즉, Calculator -> calculator 로 메소드를 Bean 등록 시에는 완전히 동일하게 동작
+  * 다른 이름으로 생성한 경우는 { expected single matching bean but found 2: calculator,getCalculator } 오류를 뱉어내고 같은 Bean 이 2개 있다는 오류가 나옴
+* 3. ComponentScan 된 Bean 에 대해서 다른 이름으로 같은 반환값을 Bean 선언하면 어떻게 되는지?
+  * @Bean calculator() 가 있는 상태에서 @Bean getCalculator() 선언은 2번과 같은 오류가 발생합니다
+  * getBean 호출 시에 명시적으로 이름을 getBean("calculator", Calculator.class) 로 지정해야만 합니다
 
 
 
