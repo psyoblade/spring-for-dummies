@@ -94,8 +94,26 @@ public void 같은객체() {
 
 
 ## Chapter 06. 빈 라이프사이클과 범위
->
+> 스프링 내에서 빈 객체가 생성 및 소멸되기 전후에 메소드를 호출할 수 있고 이는 InitializingBean 및 DisposableBean 인터페이스를 구현함으로써 destroy() afterPropertiesSet() 메소드를 Override 할 수 있다
+> 하지만 외부 라이브러리의 경우 직접 implementation 이 불가능하기 때문에 @Bean(initMethod="externalMethod", destroyMethod="destroyExternalBean") 을 통해 구현이 가능합니다
 
 
 ## Chapter 07. AOP 프로그래밍
+> AOP 의 구현은 크게 아래의 3가지로 구분되는데 스프링의 경우는 3번째에 해당하는 proxy 를 통한 공통 기능을 구현할 수가 있도록 설계되어 있습니다. 즉, 런타임에 특정 함수 호출 시에 원래 메소드 대신 proxyMethod# 가 호출되고 해당 메소드 내에서 Before, After, Around 등의 Advice 를 통해 공통 메소드가 호출되며 joinPoint 를 통해 원래 메소드가 proceed 되고 Object 를 반환하게 됩니다
+* 컴파일 시점에 공통 기능을 삽입하는 방법
+* 클래스 로딩 시점에 바이트 코드에 공통 기능을 삽입하는 방법
+* 런타임에 프록시 객체를 통해 공통기능을 삽입하는 방법
+
+
+### 주의사항
+* @Pointcut("execution(public * spring.ch07..\*(..))"과 같이 내가 포함된 package 내에 다시 포함하는 경우에 아래와 같은 오류가 발생할 수 있으므로 반드시 Aspect 클래스가 포함된 패키지를 제외한 나머지 패키지까지 내려가도록 설정해야만 합니다
+```java
+Caused by: java.lang.IllegalArgumentException: Pointcut is not well-formed: expecting '(' at character position 0
+```
+* @Bean 객체 반환시의 유형이 interface 인 경우 Aspect 의 경우 Proxy 객체를 바라보기 때문에 아래와 같이 오류가 발생할 수 있습니다 @EnableAspjectJAutoProxy(proxyTaretClass=true) 설정이 필요합니다
+```java
+Exception in thread "main" org.springframework.beans.factory.BeanNotOfRequiredTypeException: Bean named 'calculator' is expected to be of type 'spring.ch07.entities.RecursionCalculator' but was actually of type 'com.sun.proxy.$Proxy18'
+```
+
+
 

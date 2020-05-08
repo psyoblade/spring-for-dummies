@@ -1,24 +1,30 @@
 package spring.ch07;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import spring.ch07.config.Ch07AppContext;
-import spring.ch07.entities.Calculator;
+import spring.ch07.entities.NormalCalculator;
+import spring.ch07.entities.RecursionCalculator;
 
 public class Ch07Application {
+    private Logger logger = LoggerFactory.getLogger(Ch07Application.class);
 
     private AnnotationConfigApplicationContext ctx;
-    private Calculator normalCalculator;
-    private Calculator recursionCalculator;
+    private NormalCalculator normalCalculator;
+    private RecursionCalculator recursionCalculator;
 
     public Ch07Application() {
         ctx = new AnnotationConfigApplicationContext(Ch07AppContext.class);
-        normalCalculator = ctx.getBean("normalCalculator", Calculator.class);
-        recursionCalculator = ctx.getBean("recursionCalculator", Calculator.class);
+        normalCalculator = ctx.getBean(NormalCalculator.class);
+        recursionCalculator = ctx.getBean(RecursionCalculator.class);
     }
 
     public void run() {
-        System.out.println(normalCalculator.factorial(10));
-        System.out.println(recursionCalculator.factorial(10));
+        long num = 1000;
+        long normal = normalCalculator.factorial(num);
+        long recursion = recursionCalculator.factorial(num);
+        assert(normal == recursion);
     }
 
     public static void main(String[] args) {

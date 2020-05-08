@@ -14,7 +14,7 @@ import java.util.Arrays;
 public class CalculateElapsedTime {
     private Logger logger = LoggerFactory.getLogger(CalculateElapsedTime.class);
 
-    @Pointcut("execution(public * spring.ch07..*(..))")
+    @Pointcut("execution(public * spring.ch07.entities..*(..))")
     private void publicTarget() {}
 
     @Around("publicTarget()")
@@ -25,7 +25,7 @@ public class CalculateElapsedTime {
         } finally {
             long finish = System.nanoTime();
             Signature signature = joinPoint.getSignature();
-            logger.info("{}.{}({}) 실행 시간 : {} ns\n",
+            logger.info("{}.{}({}) 실행 시간 : {} ns",
                     joinPoint.getTarget().getClass().getSimpleName(),
                     signature.getName(),
                     Arrays.toString(joinPoint.getArgs()),
