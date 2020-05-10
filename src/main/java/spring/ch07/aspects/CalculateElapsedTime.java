@@ -15,7 +15,7 @@ public class CalculateElapsedTime {
     private Logger logger = LoggerFactory.getLogger(CalculateElapsedTime.class);
 
     @Pointcut("execution(public * spring.ch07.entities..*(..))")
-    private void publicTarget() {}
+    public void publicTarget() {}
 
     @Around("publicTarget()")
     public Object measure(ProceedingJoinPoint joinPoint) throws Throwable {

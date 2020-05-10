@@ -21,9 +21,10 @@ public class Ch07Application {
     }
 
     public void run() {
-        long num = 1000;
+        long num = 10;
         long normal = normalCalculator.factorial(num);
         long recursion = recursionCalculator.factorial(num);
+        logger.info("normal:{}, recursion:{}", normal, recursion);
         assert(normal == recursion);
     }
 
