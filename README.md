@@ -115,5 +115,7 @@ Caused by: java.lang.IllegalArgumentException: Pointcut is not well-formed: expe
 Exception in thread "main" org.springframework.beans.factory.BeanNotOfRequiredTypeException: Bean named 'calculator' is expected to be of type 'spring.ch07.entities.RecursionCalculator' but was actually of type 'com.sun.proxy.$Proxy18'
 ```
 
+## Chapter 08. DB 연동
+> 데이터베이스 연동을 위해 DataSource 및 JdbcTemplate 을 이용하여 데이터베이스 명령을 수행합니다. 메이블 레포지로티의 [de.flapdoodle.embedded](https://mvnrepository.com/artifact/de.flapdoodle.embed)에 가보면 mongodb 및 각종 NoSQL 은 지원하지만 MySQL은 지원하지 않았고 하지만 운이 좋게도 flapdoodle의 embedded process 를 활용한 [wix/wix-embedded-mysql](https://mvnrepository.com/artifact/com.wix/wix-embedded-mysql) 이 있어 테스트할 수 있었습니다 [Unit Test using embedded MySQL in Java](https://medium.com/@takezoe/unit-test-using-embedded-mysql-in-java-24cfdf574a16) 를 참고하여 예제코드를 만들었습니다
 
 

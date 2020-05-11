@@ -14,6 +14,10 @@ plugins {
     id 'application'
 }
 
+ext {
+    springVersion = '5.1.6.RELEASE'
+}
+
 repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
@@ -25,12 +29,16 @@ dependencies {
     implementation 'com.google.guava:guava:28.0-jre'
 
     // https://mvnrepository.com/artifact/org.springframework/spring-context
-    compile group: 'org.springframework', name: 'spring-context', version: '5.1.6.RELEASE'
+    compile group: 'org.springframework', name: 'spring-context', version: springVersion
+    compile group: 'org.springframework', name: 'spring-jdbc', version: springVersion
     compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
     compile group: 'org.aspectj', name: 'aspectjweaver', version: '1.9.2'
+    compile group: 'org.apache.tomcat', name: 'tomcat-jdbc', version: '9.0.34'
+    compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.6'
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
+    testCompile group: 'com.wix', name: 'wix-embedded-mysql', version: '4.2.0'
 }
 
 application {
