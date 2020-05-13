@@ -3,6 +3,9 @@ package spring.ch08;
 import com.wix.mysql.EmbeddedMysql;
 import com.wix.mysql.config.MysqldConfig;
 import org.junit.*;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import spring.ch08.config.Ch08AppContext;
+import spring.ch08.repositories.UserAccount;
 
 import java.sql.*;
 
@@ -21,6 +24,8 @@ public class Ch08ApplicationTest {
     private Connection conn;
     private String url = "jdbc:mysql://localhost:3306/" + schema;
 
+    private static AnnotationConfigApplicationContext appContext;
+
     @BeforeClass
     public static void setUp() {
         MysqldConfig config = aMysqldConfig(v5_6_latest)
@@ -30,7 +35,7 @@ public class Ch08ApplicationTest {
         mysqld = anEmbeddedMysql(config)
                 .addSchema(schema)
                 .start();
-
+        appContext = new AnnotationConfigApplicationContext(Ch08AppContext.class);
     }
 
     @Before
@@ -72,5 +77,9 @@ public class Ch08ApplicationTest {
         int actual = rs.getInt("count(*)");
         int expected = 1;
         assertEquals(expected, actual);
+
+        UserAccount userAccount = appContext.getBean(UserAccount.class);
+        assertEquals(1, userAccount.selectCountAll());
     }
+
 }
