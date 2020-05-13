@@ -82,4 +82,20 @@ public class Ch08ApplicationTest {
         assertEquals(1, userAccount.selectCountAll());
     }
 
+    @Test
+    public void KeyHolder_이용해서_데이터입력() throws SQLException {
+
+        String createTable = "create table ";
+        createTable += "users (id int auto_increment primary key, name varchar(100))";
+        Statement stmt = conn.createStatement();
+        stmt.execute(createTable);
+
+        UserAccount userAccount = appContext.getBean(UserAccount.class);
+        assertEquals(1, userAccount.insertUser("suhyuk"));
+        assertEquals(2, userAccount.insertUser("chiyoung"));
+        assertEquals(3, userAccount.insertUser("jh9310s"));
+        assertEquals(4, userAccount.insertUser("shryu"));
+        assertEquals(5, userAccount.insertUser("ajg0716"));
+    }
+
 }

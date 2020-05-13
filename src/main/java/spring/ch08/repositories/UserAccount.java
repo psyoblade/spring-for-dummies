@@ -1,10 +1,16 @@
 package spring.ch08.repositories;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.tomcat.jdbc.pool.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import spring.ch08.entities.User;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -13,6 +19,10 @@ import java.util.List;
 public class UserAccount {
 
     private JdbcTemplate jdbcTemplate;
+
+    public UserAccount(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    }
 
     public UserAccount(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -36,5 +46,29 @@ public class UserAccount {
 
     public int selectCountAll() {
         return jdbcTemplate.queryForObject("select count(*) from users", Integer.class);
+    }
+
+    public void update(User user) {
+        jdbcTemplate.update(
+                "update user set name = ?, password = ? where email = ?",
+                user.getUsername(), user.getPassword(), user.getEmail()
+        );
+    }
+
+    public int insertUser(String name) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                PreparedStatement pstmt = con.prepareStatement(
+                        "insert into users (name) values (?)",
+                        new String[] {"id"});
+                pstmt.setString(1, name);
+                return pstmt;
+            }
+        }, keyHolder);
+        Number keyValue = keyHolder.getKey();
+        assert keyValue != null;
+        return keyValue.intValue();
     }
 }
