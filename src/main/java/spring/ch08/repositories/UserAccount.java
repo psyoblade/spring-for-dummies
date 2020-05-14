@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class UserAccount {
@@ -70,5 +71,15 @@ public class UserAccount {
         Number keyValue = keyHolder.getKey();
         assert keyValue != null;
         return keyValue.intValue();
+    }
+
+    public int lambdaInsertUser(String name) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update((Connection con) -> {
+            PreparedStatement pstmt = con.prepareStatement("insert into users (name) values (?)", new String[] {"id"});
+            pstmt.setString(1, name);
+            return pstmt;
+        }, keyHolder);
+        return Objects.requireNonNull(keyHolder.getKey()).intValue();
     }
 }
