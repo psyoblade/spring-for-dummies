@@ -1,13 +1,20 @@
 package spring.ch08.config;
 
 import org.apache.tomcat.jdbc.pool.DataSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import spring.ch08.repositories.ChangeProfileRepository;
 import spring.ch08.repositories.UserAccount;
+import spring.ch08.services.ChangeProfileService;
 
 @Configuration
+@EnableTransactionManagement
+@EnableAspectJAutoProxy(proxyTargetClass = true)
 public class Ch08AppContext {
 
     @Bean(destroyMethod = "close")
@@ -34,5 +41,20 @@ public class Ch08AppContext {
     @Bean
     public UserAccount userAccount() {
         return new UserAccount(jdbcTemplate());
+    }
+
+    @Bean
+    public ChangeProfileRepository changeProfileRepository() {
+        return new ChangeProfileRepository(jdbcTemplate());
+    }
+
+    @Bean
+    public ChangeProfileService changeProfileService() {
+        return new ChangeProfileService(changeProfileRepository());
+    }
+
+    @Bean
+    public PlatformTransactionManager platformTransactionManager() {
+        return new DataSourceTransactionManager(dataSource());
     }
 }

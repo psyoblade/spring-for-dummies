@@ -118,6 +118,7 @@ Exception in thread "main" org.springframework.beans.factory.BeanNotOfRequiredTy
 ## Chapter 08. DB 연동
 > 데이터베이스 연동을 위해 DataSource 및 JdbcTemplate 을 이용하여 데이터베이스 명령을 수행합니다. 메이블 레포지로티의 [de.flapdoodle.embedded](https://mvnrepository.com/artifact/de.flapdoodle.embed)에 가보면 mongodb 및 각종 NoSQL 은 지원하지만 MySQL은 지원하지 않았고 하지만 운이 좋게도 flapdoodle의 embedded process 를 활용한 [wix/wix-embedded-mysql](https://mvnrepository.com/artifact/com.wix/wix-embedded-mysql) 이 있어 테스트할 수 있었습니다 [Unit Test using embedded MySQL in Java](https://medium.com/@takezoe/unit-test-using-embedded-mysql-in-java-24cfdf574a16) 를 참고하여 예제코드를 만들었습니다
 
+### 데이터소스 연동
 * Bean 객체에서 사용하는 풀링 객체를 항상 풀로 되돌리기 위해서는 close 메소드를 호출해야 하는데, 외부 라이브러리의 경우에는 init, destroy 구현이 불가능하므로 destroyMethod 키워드를 이용합니다.
 ```java
 @Bean(destroyMethod = "close")
@@ -129,3 +130,15 @@ public DataSource dataSource() {
     ...
 }
 ```
+
+### 트랜잭션 적용
+> @Transactional 을 이용하여 멀티 트랜잭션 상황에서 commit, rollback 을 테스트합니다
+> email (key) name, age 를 입력하는 과정에서 name 을 업데이트 하고, age 값이 오류인 경우 rollback 을 합니다
+> 이번에는 Repository 및 Service 개념을 도입하고 인터페이스를 통한 구현을 해 보았습니다
+
+* 마찬가지로 Interface 를 사용한 Bean 객체의 반환 시에는 Proxy 클래스가 넘어오게 됨으로, 반드시 @EnableAspectJAutoProxy(proxyTargetClass = true) 설정이 필요합니다
+* Transactional 기능을 사용하기 위해서는 EnableTransactionManagement 를 활성화하고 PlatformTransactionManger 를 반환하는 new DataSourceTransactionManage Bean 주입이 필요합니다
+
+
+
+
