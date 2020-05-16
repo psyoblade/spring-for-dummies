@@ -18,6 +18,7 @@ public class Ch08ApplicationTest {
 
     private static EmbeddedMysql mysqld;
     private static String schema = "psyoblade";
+    private static final String table = "users";
     private static String username = "suhyuk";
     private static String password = "";
 
@@ -38,19 +39,27 @@ public class Ch08ApplicationTest {
         appContext = new AnnotationConfigApplicationContext(Ch08AppContext.class);
     }
 
+    @AfterClass
+    public static void tearDown() {
+        mysqld.stop();
+    }
+
+    private void dropUser() throws SQLException {
+        String dropTable = "drop table if exists ";
+        dropTable += table;
+        Statement stmt = conn.createStatement();
+        stmt.execute(dropTable);
+    }
+
     @Before
     public void initialize() throws SQLException {
         conn = DriverManager.getConnection(url, username, password);
+        dropUser();
     }
 
     @After
     public void destroy() throws SQLException {
         conn.close();
-    }
-
-    @AfterClass
-    public static void tearDown() {
-        mysqld.stop();
     }
 
     @Test

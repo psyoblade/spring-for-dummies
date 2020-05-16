@@ -21,13 +21,12 @@ public class ChangeProfileServiceTest {
     private static AnnotationConfigApplicationContext appContext;
     private static EmbeddedMysql mysqld;
     private static String schema = "psyoblade";
-    private static String username = "suhyuk";
-    private static String password = "";
 
     private Connection conn;
     private String url = "jdbc:mysql://localhost:3306/" + schema;
-    private final String defaultUsername = "suhyuk";
-    private final int defaultAge = 0;
+    private static final String defaultUsername = "suhyuk";
+    private static final String defaultPassword = "";
+    private static final int defaultAge = 0;
 
     private ChangeProfileService changeProfileService;
 
@@ -35,7 +34,7 @@ public class ChangeProfileServiceTest {
     public static void setUp() {
         MysqldConfig config = aMysqldConfig(v5_6_latest)
                 .withPort(3306)
-                .withUser(username, password)
+                .withUser(defaultUsername, defaultPassword)
                 .build();
         mysqld = anEmbeddedMysql(config)
                 .addSchema(schema)
@@ -46,6 +45,13 @@ public class ChangeProfileServiceTest {
     @AfterClass
     public static void tearDown() {
         mysqld.stop();
+    }
+
+    private void dropUser() throws SQLException {
+        String dropTable = "drop table if exists ";
+        dropTable += "users";
+        Statement stmt = conn.createStatement();
+        stmt.execute(dropTable);
     }
 
     private void createUser() throws SQLException {
@@ -68,8 +74,9 @@ public class ChangeProfileServiceTest {
 
     @Before
     public void start() throws SQLException {
-        conn = DriverManager.getConnection(url, username, password);
+        conn = DriverManager.getConnection(url, defaultUsername, defaultPassword);
         changeProfileService = appContext.getBean(ChangeProfileService.class);
+        dropUser();
         createUser();
     }
 
