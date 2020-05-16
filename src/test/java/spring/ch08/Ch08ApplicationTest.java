@@ -1,47 +1,29 @@
 package spring.ch08;
 
-import com.wix.mysql.EmbeddedMysql;
-import com.wix.mysql.config.MysqldConfig;
 import org.junit.*;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import spring.ch08.config.Ch08AppContext;
 import spring.ch08.repositories.UserAccount;
+import spring.junit.JUnitWithMySQL;
 
 import java.sql.*;
-
-import static com.wix.mysql.EmbeddedMysql.anEmbeddedMysql;
-import static com.wix.mysql.config.MysqldConfig.aMysqldConfig;
-import static com.wix.mysql.distribution.Version.*;
 import static org.junit.Assert.assertEquals;
 
-public class Ch08ApplicationTest {
+public class Ch08ApplicationTest extends JUnitWithMySQL {
 
-    private static EmbeddedMysql mysqld;
-    private static String schema = "psyoblade";
     private static final String table = "users";
-    private static String username = "suhyuk";
-    private static String password = "";
-
     private Connection conn;
-    private String url = "jdbc:mysql://localhost:3306/" + schema;
-
     private static AnnotationConfigApplicationContext appContext;
 
     @BeforeClass
-    public static void setUp() {
-        MysqldConfig config = aMysqldConfig(v5_6_latest)
-                .withPort(3306)
-                .withUser(username, password)
-                .build();
-        mysqld = anEmbeddedMysql(config)
-                .addSchema(schema)
-                .start();
+    public static void setUp() throws SQLException {
+        JUnitWithMySQL.setUp();
         appContext = new AnnotationConfigApplicationContext(Ch08AppContext.class);
     }
 
     @AfterClass
     public static void tearDown() {
-        mysqld.stop();
+        JUnitWithMySQL.tearDown();
     }
 
     private void dropUser() throws SQLException {
@@ -53,7 +35,7 @@ public class Ch08ApplicationTest {
 
     @Before
     public void initialize() throws SQLException {
-        conn = DriverManager.getConnection(url, username, password);
+        conn = getConnection();
         dropUser();
     }
 
