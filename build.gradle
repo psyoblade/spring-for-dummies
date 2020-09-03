@@ -7,11 +7,9 @@
  */
 
 plugins {
-    // Apply the java plugin to add support for Java
     id 'java'
-
-    // Apply the application plugin to add support for building a CLI application.
     id 'application'
+    id 'war'
 }
 
 ext {
@@ -38,8 +36,17 @@ dependencies {
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
     compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 
+    // providedCompile : compile 시에만 필요하고 런타임에는 필요 없는 경우 (only for war plugin)
+    providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
+    // providedRuntime : 런타임에 제공되는 경우 (only for war plugin)
+    providedRuntime 'javax.servlet.jsp:javax.servlet.jsp-api:2.3.2-b02'
+    // compile : 컴파일시에 필요한 의존성을 명시
+    compile group:'javax.servlet', name:'jstl', version: '1.2'
+    compile group:'org.springframework', name:'spring-webmvc', version: springVersion
+
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
+    // testCompile : 테스트 시에 필요한 의존성을 명시
     testCompile group: 'com.wix', name: 'wix-embedded-mysql', version: '4.2.0'
 }
 
